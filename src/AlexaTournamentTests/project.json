@@ -1,7 +1,5 @@
 {
   "version": "1.0.0-*",
-  "buildOptions": {
-  },
 
   "dependencies": {
     "Microsoft.NETCore.App": {
@@ -16,11 +14,9 @@
     },
     "Slight.Alexa.Core": "1.0.10-beta",
     "Newtonsoft.Json": "9.0.2-beta1",
-    "AWSSDK.S3": "3.3.5.2"
-  },
-
-  "tools": {
-    "Amazon.Lambda.Tools" : "1.0.4-preview1"
+    "AlexaNextTournamentEndpoint": "1.0.0-*",
+    "xunit": "2.2.0-beta4-build3444",
+    "dotnet-test-xunit": "2.2.0-preview2-build1029"
   },
 
   "frameworks": {

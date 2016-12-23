@@ -1,4 +1,6 @@
 ﻿using AlexaNextTournamentEndpoint.Objects;
+using Amazon.Lambda.Core;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,43 +10,22 @@ namespace AlexaNextTournamentEndpoint.Helpers
 {
     public static class TournamentHelper
     {
-        public static List<Tournament> GetTournaments()
+        public static List<Tournament> GetTournaments(DateTime after, ILambdaLogger _logger)
         {
-            List<Tournament> tournaments = new List<Tournament>();
+            string bucket = Environment.GetEnvironmentVariable("S3Bucket");
+            string key = Environment.GetEnvironmentVariable("TournamentFileKey");
+            string regionName = Environment.GetEnvironmentVariable("S3Region");
 
-            tournaments.Add(new Tournament()
-            {
-                Host = "Full Rut Joad",
-                Location = "Parker, Colorado",
-                EventStart = new DateTime(2017, 01, 14),
-                EventEnd = new DateTime(2017, 1, 15)
-            });
+            _logger.Log($"{bucket}{key}@{regionName}");
 
-            tournaments.Add(new Tournament()
-            {
-                Host = "Rocky Mountain Hot Shtos",
-                Location = "Fort Collins, Colorado",
-                EventStart = new DateTime(2017, 2, 18),
-                EventEnd = new DateTime(2017, 2, 19)
-            });
+            var task = S3Helper.ReadDocument(bucket, key, regionName);
+            Task.WaitAll(task);
 
-            tournaments.Add(new Tournament()
-            {
-                Host = "Archery School of the Rockies",
-                Location = "Colorado Springs, Colorado",
-                EventStart = new DateTime(2017, 3, 18),
-                EventEnd = new DateTime(2017, 3, 19)
-            });
+            string json = task.Result;
+            _logger.Log(json);
 
-            tournaments.Add(new Tournament()
-            {
-                Host = "Greeley X Factor",
-                Location = "Denver, Colorado",
-                EventStart = new DateTime(2017, 4, 22),
-                EventEnd = new DateTime(2017, 4, 23)
-            });
-
-            return tournaments;
+            List<Tournament> tournaments = JsonConvert.DeserializeObject<List<Tournament>>(json);
+            return tournaments.Where(t => t.EventStart >= after).OrderBy(t => t.EventEnd).ToList();
         }
     }
 }

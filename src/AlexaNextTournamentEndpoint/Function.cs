@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 using Amazon.Lambda.Core;
-using Amazon.Lambda.Serialization;
 using Slight.Alexa.Framework.Models.Requests;
 using Slight.Alexa.Framework.Models.Responses;
+using AlexaNextTournamentEndpoint.Helpers;
+using AlexaNextTournamentEndpoint.Interfaces;
+using AlexaNextTournamentEndpoint.Handlers;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializerAttribute(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -14,22 +11,43 @@ using Slight.Alexa.Framework.Models.Responses;
 namespace AlexaNextTournamentEndpoint
 {
     public class Function
-    {
-        
+    {        
         /// <summary>
         /// A simple function that takes a string and does a ToUpper
         /// </summary>
-        /// <param name="input"></param>
-        /// <param name="context"></param>
+        /// <param name="_input"></param>
+        /// <param name="_context"></param>
         /// <returns></returns>
-        public SkillResponse FunctionHandler(SkillRequest input, ILambdaContext context)
+        public SkillResponse FunctionHandler(SkillRequest _input, ILambdaContext _context)
         {
-            DateTime now = DateTime.UtcNow;
+            var logger = _context.Logger;
+            IAlexaHandler handler = null;
 
-            
+            if (_input.GetRequestType() == typeof(Slight.Alexa.Framework.Models.Requests.RequestTypes.ILaunchRequest))
+            {
+                logger.LogLine($"LaunchRequest made");
+                handler = new WelcomeHandler();
+            }
+            else if (_input.GetRequestType() == typeof(Slight.Alexa.Framework.Models.Requests.RequestTypes.IIntentRequest))
+            {
+                string intentName = _input.Request.Intent.Name;
 
+                logger.LogLine($"Intent Requested {intentName}");
+
+                switch (intentName)
+                {
+                    case "NextTournamentIntent":
+                        handler = new NextTournamentHandler();
+                        break;
+                }
+            }
+
+            if (handler == null)
+            {
+                handler = new UnknownHandler();
+            }
+
+            return handler.HandleRequest(_input, logger);
         }
-
-        public 
     }
 }
