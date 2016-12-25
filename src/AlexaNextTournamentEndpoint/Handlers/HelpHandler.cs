@@ -7,11 +7,11 @@ using AlexaNextTournamentEndpoint.Constants;
 
 namespace AlexaNextTournamentEndpoint.Handlers
 {
-    public class UnknownHandler : IAlexaHandler
+    public class HelpHandler : IAlexaHandler
     {
         public SkillResponse HandleRequest(SkillRequest _request, ILambdaLogger _log)
         {
-            return ResponseHelper.GetPlainTextOutputSpeech(SpeechConstants.UnknownRequest, false);
+            return ResponseHelper.GetPlainTextOutputSpeech(SpeechConstants.HelpText, false);
         }
     }
 }

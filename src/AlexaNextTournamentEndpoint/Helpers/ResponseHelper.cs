@@ -5,7 +5,7 @@ namespace AlexaNextTournamentEndpoint.Helpers
 {
     public static class ResponseHelper
     {
-        public static SkillResponse GetPlainTextOutputSpeech(string text, bool endSession = false)
+        public static SkillResponse GetPlainTextOutputSpeech(string text, bool endSession)
         {
             var innerResponse = new PlainTextOutputSpeech();
             innerResponse.Text = text;
@@ -30,6 +30,19 @@ namespace AlexaNextTournamentEndpoint.Helpers
             var response = new Response();
             response.ShouldEndSession = endSession;
             response.OutputSpeech = innerResponse;
+
+            var skillResponse = new SkillResponse();
+            skillResponse.Response = response;
+            skillResponse.Version = "1.0";
+            skillResponse.SessionAttributes = new Dictionary<string, object>();
+
+            return skillResponse;
+        }
+
+        public static SkillResponse StopOutput()
+        {
+            var response = new Response();
+            response.ShouldEndSession = true;
 
             var skillResponse = new SkillResponse();
             skillResponse.Response = response;

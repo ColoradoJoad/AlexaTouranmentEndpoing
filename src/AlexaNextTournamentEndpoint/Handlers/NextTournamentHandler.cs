@@ -1,4 +1,5 @@
-﻿using AlexaNextTournamentEndpoint.Helpers;
+﻿using AlexaNextTournamentEndpoint.Constants;
+using AlexaNextTournamentEndpoint.Helpers;
 using AlexaNextTournamentEndpoint.Interfaces;
 using AlexaNextTournamentEndpoint.Objects;
 using Amazon.Lambda.Core;
@@ -43,23 +44,7 @@ namespace AlexaNextTournamentEndpoint.Handlers
 
                 Tournament t = remaining.First();
 
-                SkillResponse response = null;
-                string cardTitle = $"{t.EventStart:MMMM} Tournament";
-                string content = null;
-
-                if (t.EventStart.Equals(t.EventEnd))
-                {
-                    content = $"Host - {t.Host}\nLocation - {t.Location}\nDate - {t.EventStart:MM/dd/yyyy}";
-                    response = ResponseHelper.GetPlainTextOutputSpeech($"The next tournament is hosted by {t.Host} in {t.Location}.  It will be on {t.EventStart:m}.", true);
-                }
-                else
-                {
-                    content = $"Host - {t.Host}\nLocation - {t.Location}\nStart - {t.EventStart:MM/dd/yyyy}\nEnd - {t.EventEnd:MM/dd/yyyy}";
-                    response = ResponseHelper.GetPlainTextOutputSpeech($"The next tournament is hosted by {t.Host} in {t.Location}.  It will start on {t.EventStart:m} and end on {t.EventEnd:m}.", true);
-                }
-
-                ResponseHelper.AddCard(response, cardTitle, content);
-                return response;
+                return TournamentHelper.GetTournamentResponse(t);
             }
             else
             {
@@ -68,12 +53,12 @@ namespace AlexaNextTournamentEndpoint.Handlers
                 if (nowMonth > 4 && nowMonth < 8)
                 {
                     _log.Log("No tournaments found (not in season).");
-                    return ResponseHelper.GetPlainTextOutputSpeech("The indoor season has ended.  Check back in August.");
+                    return ResponseHelper.GetPlainTextOutputSpeech(SpeechConstants.NoNextTournamentOutOfSeaon, true);
                 }
                 else
                 {
                     _log.Log("No tournaments found.");
-                    return ResponseHelper.GetPlainTextOutputSpeech("I am not aware of any tournaments that have been scheduled.");
+                    return ResponseHelper.GetPlainTextOutputSpeech(SpeechConstants.NoNextTournamentInSeason, true);
                 }
             }
         }

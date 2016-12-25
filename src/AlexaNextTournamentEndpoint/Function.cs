@@ -30,14 +30,23 @@ namespace AlexaNextTournamentEndpoint
             }
             else if (_input.GetRequestType() == typeof(Slight.Alexa.Framework.Models.Requests.RequestTypes.IIntentRequest))
             {
-                string intentName = _input.Request.Intent.Name;
+                string intentName = _input.Request.Intent.Name.ToLower();
 
                 logger.LogLine($"Intent Requested {intentName}");
 
                 switch (intentName)
                 {
-                    case "NextTournamentIntent":
+                    case "nexttournamentintent":
                         handler = new NextTournamentHandler();
+                        break;
+                    case "monthintent":
+                        handler = new SpecificMonthHandler();
+                        break;
+                    case "amazon.helpintent":
+                        handler = new HelpHandler();
+                        break;
+                    case "amazon.stopintent":
+                        handler = new StopHandler();
                         break;
                 }
             }

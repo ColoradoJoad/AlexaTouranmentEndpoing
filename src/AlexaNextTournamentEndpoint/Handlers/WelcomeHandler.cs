@@ -3,6 +3,7 @@ using Amazon.Lambda.Core;
 using Slight.Alexa.Framework.Models.Requests;
 using Slight.Alexa.Framework.Models.Responses;
 using AlexaNextTournamentEndpoint.Helpers;
+using AlexaNextTournamentEndpoint.Constants;
 
 namespace AlexaNextTournamentEndpoint.Handlers
 {
@@ -10,7 +11,7 @@ namespace AlexaNextTournamentEndpoint.Handlers
     {
         public SkillResponse HandleRequest(SkillRequest _request, ILambdaLogger _log)
         {
-            return ResponseHelper.GetPlainTextOutputSpeech("Welcome to Colorado Junior Olympic Archery");
+            return ResponseHelper.GetPlainTextOutputSpeech(SpeechConstants.WelcomeText, false);
         }
     }
 }
