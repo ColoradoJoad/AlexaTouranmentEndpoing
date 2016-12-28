@@ -46,6 +46,7 @@ namespace AlexaNextTournamentEndpoint
                         handler = new HelpHandler();
                         break;
                     case "amazon.stopintent":
+                    case "amazon.cancelintent":
                         handler = new StopHandler();
                         break;
                 }

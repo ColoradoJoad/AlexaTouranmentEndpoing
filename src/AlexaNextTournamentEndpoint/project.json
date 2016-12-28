@@ -4,19 +4,16 @@
   },
 
   "dependencies": {
-    "Microsoft.NETCore.App": {
-      "type": "platform",
-      "version": "1.0.0"
-    },
+    "Microsoft.NETCore.App": "1.0.3",
     "Amazon.Lambda.Core": "1.0.0*",
     "Amazon.Lambda.Serialization.Json": "1.0.1",
     "Amazon.Lambda.Tools": {
       "type": "build",
       "version": "1.0.4-preview1"
     },
-    "Slight.Alexa.Core": "1.0.10-beta",
     "Newtonsoft.Json": "9.0.2-beta1",
-    "AWSSDK.S3": "3.3.5.2"
+    "AWSSDK.S3": "3.3.5.2",
+    "Slight.Alexa.Core": "1.0.10-beta"
   },
 
   "tools": {
